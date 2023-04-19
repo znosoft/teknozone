@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:teknozone/contact-us.dart';
+import 'package:teknozone/home-page.dart';
+import 'package:teknozone/settings.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,62 +33,39 @@ class MyAppState extends ChangeNotifier {}
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constransts) {
-      return Scaffold(
-          backgroundColor: Color.fromARGB(255, 95, 93, 93),
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 3,
+        child: Scaffold(
           appBar: AppBar(
-            title: Text("TEKNOZONE"),
+            backgroundColor: Color.fromARGB(255, 95, 93, 93),
+            bottom: TabBar(
+              tabs: [
+                Tab(icon: Image.asset('assets/OLCUMLER.jpg')),
+                Tab(icon: Image.asset('assets/SETTING.jpg')),
+                Tab(icon: Image.asset('assets/HAKKINDA.jpg')),
+              ],
+            ),
+            title: Center(child: Image.asset("assets/Teknozone.jpg")),
           ),
-          body: Column(children: [
-            Row(children: [
-              IconButton(
-                icon: Image.asset('assets/BT_OFF.jpg'),
-                iconSize: 50,
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Image.asset('assets/BT_ON.jpg'),
-                iconSize: 50,
-                onPressed: () {},
-              )
-            ]),
-            Row(
-              children: [
-                IconButton(
-                  icon: Image.asset('assets/OZONE.jpg'),
-                  iconSize: 50,
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                IconButton(
-                  icon: Image.asset('assets/TEMP.jpg'),
-                  iconSize: 50,
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                IconButton(
-                  icon: Image.asset('assets/NEM.jpg'),
-                  iconSize: 50,
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                IconButton(
-                  icon: Image.asset('assets/BT_TIME_OFF.jpg'),
-                  iconSize: 50,
-                  onPressed: () {},
-                ),
-              ],
-            ),
-          ]));
-    });
+          body: TabBarView(
+            children: [
+              HomePage(),
+              SettingsPage(),
+              ContactUsPage(),
+              //Icon(Icons.directions_bike),
+            ],
+          ),
+        ),
+      ),
+    );
+    /*
+    return Scaffold(
+        backgroundColor: Color.fromARGB(255, 95, 93, 93),
+        appBar: AppBar(
+          title: Text("TEKNOZONE"),
+        ),
+        body: HomePage());
+      */
   }
 }
