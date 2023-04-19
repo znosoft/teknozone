@@ -1,4 +1,3 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +16,8 @@ class MyApp extends StatelessWidget {
         title: 'Namer App',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+          colorScheme: ColorScheme.fromSeed(
+              background: Colors.black, seedColor: Colors.black),
         ),
         home: MyHomePage(),
       ),
@@ -25,151 +25,67 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyAppState extends ChangeNotifier {
-  var current = WordPair.random();
-  var favorites = <WordPair>[];
+class MyAppState extends ChangeNotifier {}
 
-  void getNext() {
-    current = WordPair.random();
-    notifyListeners();
-  }
-
-  void toggleFavorite() {
-    if (favorites.contains(current)) {
-      favorites.remove(current);
-    } else {
-      favorites.add(current);
-    }
-    notifyListeners();
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  var selectedIndex = 0;
+class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Widget page;
-    switch (selectedIndex) {
-      case 0:
-        page = GeneratorPage();
-        break;
-      case 1:
-        page = Placeholder();
-        break;
-      default:
-        throw UnimplementedError('no widget for $selectedIndex');
-    }
     return LayoutBuilder(builder: (context, constransts) {
       return Scaffold(
-        body: Row(
-          children: [
-            SafeArea(
-              child: NavigationRail(
-                extended: true,
-                destinations: [
-                  NavigationRailDestination(
-                    icon: Icon(Icons.home),
-                    label: Text('Anasayfa'),
-                  ),
-                  NavigationRailDestination(
-                      icon: Icon(Icons.favorite), label: Text('Beğendiklerim')),
-                ],
-                selectedIndex: selectedIndex,
-                onDestinationSelected: (value) {
-                  setState(() {
-                    selectedIndex = value;
-                  });
-                },
+          backgroundColor: Color.fromARGB(255, 95, 93, 93),
+          appBar: AppBar(
+            title: Text("TEKNOZONE"),
+          ),
+          body: Column(children: [
+            Row(children: [
+              IconButton(
+                icon: Image.asset('assets/BT_OFF.jpg'),
+                iconSize: 50,
+                onPressed: () {},
               ),
+              IconButton(
+                icon: Image.asset('assets/BT_ON.jpg'),
+                iconSize: 50,
+                onPressed: () {},
+              )
+            ]),
+            Row(
+              children: [
+                IconButton(
+                  icon: Image.asset('assets/OZONE.jpg'),
+                  iconSize: 50,
+                  onPressed: () {},
+                ),
+              ],
             ),
-            Expanded(
-              child: Container(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                child: page,
-              ),
+            Row(
+              children: [
+                IconButton(
+                  icon: Image.asset('assets/TEMP.jpg'),
+                  iconSize: 50,
+                  onPressed: () {},
+                ),
+              ],
             ),
-          ],
-        ),
-      );
+            Row(
+              children: [
+                IconButton(
+                  icon: Image.asset('assets/NEM.jpg'),
+                  iconSize: 50,
+                  onPressed: () {},
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                IconButton(
+                  icon: Image.asset('assets/BT_TIME_OFF.jpg'),
+                  iconSize: 50,
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ]));
     });
-  }
-}
-
-class GeneratorPage extends StatelessWidget {
-  const GeneratorPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    var pair = appState.current;
-    IconData icon;
-    if (appState.favorites.contains(pair)) {
-      icon = Icons.favorite;
-    } else {
-      icon = Icons.favorite_border;
-    }
-    return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        BigCard(pair: pair),
-        SizedBox(
-          height: 10,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-                onPressed: () {
-                  appState.toggleFavorite();
-                },
-                child: Row(
-                  children: [
-                    Icon(icon),
-                    SizedBox(width: 5.0),
-                    Text("Like"),
-                  ],
-                )),
-            SizedBox(width: 10),
-            ElevatedButton(
-                onPressed: () {
-                  appState.getNext();
-                },
-                child: Text("Next")),
-          ],
-        )
-      ],
-    ));
-  }
-}
-
-class BigCard extends StatelessWidget {
-  const BigCard({
-    super.key,
-    required this.pair,
-  });
-
-  final WordPair pair;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final style = theme.textTheme.displayMedium!.copyWith(
-        color: theme.colorScheme.onPrimary,
-        fontWeight: FontWeight.w600,
-        fontStyle: FontStyle.italic);
-    var myColor = Color.fromRGBO(0, 255, 0, 1.0);
-    return Card(
-      color: myColor,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Text(pair.asLowerCase, style: style),
-      ),
-    );
   }
 }
