@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 
 class ContactUsPage extends StatelessWidget {
@@ -25,34 +26,7 @@ class ContactUsPage extends StatelessWidget {
             onPressed: () {},
           ),
         ],
-      ),
-      Row(
-        children: [
-          IconButton(
-            icon: Image.asset('assets/TEMP.jpg'),
-            iconSize: 10,
-            onPressed: () {},
-          ),
-        ],
-      ),
-      Row(
-        children: [
-          IconButton(
-            icon: Image.asset('assets/NEM.jpg'),
-            iconSize: 50,
-            onPressed: () {},
-          ),
-        ],
-      ),
-      Row(
-        children: [
-          IconButton(
-            icon: Image.asset('assets/BT_TIME_OFF.jpg'),
-            iconSize: 10,
-            onPressed: () {},
-          ),
-        ],
-      ),
+      )
     ]));
   }
 }

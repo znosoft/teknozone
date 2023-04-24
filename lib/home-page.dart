@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -39,7 +40,7 @@ class HomePage extends StatelessWidget {
         children: [
           IconButton(
             icon: Image.asset('assets/NEM.jpg'),
-            iconSize: 50,
+            iconSize: 10,
             onPressed: () {},
           ),
         ],
