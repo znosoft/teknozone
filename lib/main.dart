@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
-        title: 'Namer App',
+        title: 'Teknozone',
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
@@ -34,6 +34,7 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      //theme: ThemeData(primarySwatch: Brightness.dark),
       home: DefaultTabController(
         length: 3,
         child: Scaffold(
@@ -46,7 +47,12 @@ class MyHomePage extends StatelessWidget {
                 Tab(icon: Image.asset('assets/HAKKINDA.jpg')),
               ],
             ),
-            title: Center(child: Image.asset("assets/Teknozone.jpg")),
+            title: Center(
+                child: Image.asset(
+              "assets/Teknozone.jpg",
+              scale: 0.6,
+              height: 30,
+            )),
           ),
           body: TabBarView(
             children: [
