@@ -17,52 +17,19 @@ class _SettingsPage extends State<SettingsPage> {
       constraints: BoxConstraints(maxWidth: 150),
       child: Container(
         color: MyColors.grayColor,
-        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        child: Flex(direction: Axis.vertical, children: [
           SettingsBigCard(),
           CustomIconButton(
               icon: 'assets/PASS_CHANGE.jpg',
               onPressed: () {
                 print("PASS CHANGE button clicked");
               }),
-          Row(
-            children: [
-              CustomIconButton(
-                  cardHeight: 60,
-                  icon: 'assets/PASS_Check.jpg',
-                  onPressed: () {
-                    print("PASS CHANGE button clicked");
-                  }),
-              Card(color: Colors.black, child: SizedBox(width: 20, height: 20)),
-              CustomIconButton(
-                  cardHeight: 60,
-                  icon: 'assets/BT_SAVE_AP.jpg',
-                  onPressed: () {
-                    print("PASS CHANGE button clicked");
-                  }),
-              CustomIconButton(
-                  cardHeight: 60,
-                  icon: 'assets/BT_SAVE_CD.jpg',
-                  onPressed: () {
-                    print("PASS CHANGE button clicked");
-                  }),
-              CustomIconButton(
-                  cardHeight: 60,
-                  icon: 'assets/BT_SAVE_TIME.jpg',
-                  onPressed: () {
-                    print("PASS CHANGE button clicked");
-                  }),
-              CustomIconButton(
-                  cardHeight: 60,
-                  icon: 'assets/BT_SAVE_DATE.jpg',
-                  onPressed: () {
-                    print("PASS CHANGE button clicked");
-                  }),
-            ],
-          ),
-          Container(
-            color: Colors.yellow,
-            width: 200,
-            height: 120,
+          SettingsButtonGroup1(),
+          Expanded(
+            child: Container(
+              color: Colors.yellow,
+              height: 120,
+            ),
           ),
           Row(
             children: [
@@ -81,6 +48,51 @@ class _SettingsPage extends State<SettingsPage> {
         ]),
       ),
     ));
+  }
+}
+
+class SettingsButtonGroup1 extends StatelessWidget {
+  const SettingsButtonGroup1({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        CustomIconButton(
+            cardHeight: 60,
+            icon: 'assets/PASS_Check.jpg',
+            onPressed: () {
+              print("PASS CHANGE button clicked");
+            }),
+        Card(color: Colors.black, child: SizedBox(width: 20, height: 20)),
+        CustomIconButton(
+            cardHeight: 60,
+            icon: 'assets/BT_SAVE_AP.jpg',
+            onPressed: () {
+              print("PASS CHANGE button clicked");
+            }),
+        CustomIconButton(
+            cardHeight: 60,
+            icon: 'assets/BT_SAVE_CD.jpg',
+            onPressed: () {
+              print("PASS CHANGE button clicked");
+            }),
+        CustomIconButton(
+            cardHeight: 60,
+            icon: 'assets/BT_SAVE_TIME.jpg',
+            onPressed: () {
+              print("PASS CHANGE button clicked");
+            }),
+        CustomIconButton(
+            cardHeight: 60,
+            icon: 'assets/BT_SAVE_DATE.jpg',
+            onPressed: () {
+              print("PASS CHANGE button clicked");
+            }),
+      ],
+    );
   }
 }
 
@@ -104,35 +116,35 @@ class SettingsBigCard extends StatelessWidget {
                 "assets/BT_TIME_AK.jpg",
                 width: 40,
               ),
-              SizedBox(width: 20),
-              Column(
-                children: [
-                  Text(
-                    "--:--",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  Text(
-                    "--:--",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      "--:--",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      "--:--",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(width: 20),
               Image.asset("assets/BT_TIME_CD.jpg", width: 40),
-              SizedBox(width: 20),
-              Column(
-                children: [
-                  Text(
-                    "--:--",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  Text(
-                    "--:--",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      "--:--",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      "--:--",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(width: 20),
             ]),
           ),
         ),
