@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 import 'home-page.dart';
 
@@ -10,6 +11,28 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPage extends State<SettingsPage> {
   final Color grayColor = Color.fromARGB(255, 95, 93, 93);
+  bool isScaning = false;
+  void ScanBLE() {
+    FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
+    if (isScaning)
+      flutterBlue.stopScan();
+    else {
+      // Start scanning
+      flutterBlue.startScan(timeout: Duration(seconds: 10));
+// Listen to scan results
+      var subscription = flutterBlue.scanResults.listen((results) {
+        // do something with scan results
+        print("scaning...");
+        for (ScanResult r in results) {
+          print('${r.device.name} found! rssi: ${r.rssi}');
+        }
+      });
+    }
+    setState(() {
+      isScaning != isScaning;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Flexible(
@@ -36,7 +59,8 @@ class _SettingsPage extends State<SettingsPage> {
               CustomIconButton(
                   icon: 'assets/BT_SCAN.jpg',
                   onPressed: () {
-                    print("PASS CHANGE button clicked");
+                    print("PASS SCAN button clicked");
+                    ScanBLE();
                   }),
               CustomIconButton(
                   icon: 'assets/BT_SAVE.jpg',
