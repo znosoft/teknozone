@@ -1,9 +1,17 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  double _currentSliderValue = 1;
   final cardWidth = 200.0;
+
   final cardHeight = 80.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +32,20 @@ class HomePage extends StatelessWidget {
                               print("BT_ON");
                             },
                           ),
-                          HomePageCustomCard(text: "PPM SET: --.--ppm")
+                          HomePageCustomCard(
+                            text: "",
+                            widget: Slider(
+                              value: _currentSliderValue,
+                              max: 10,
+                              divisions: 10,
+                              label: _currentSliderValue.round().toString(),
+                              onChanged: (double value) {
+                                setState(() {
+                                  _currentSliderValue = value;
+                                });
+                              },
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -118,12 +139,49 @@ class CustomIconButton extends StatelessWidget {
   }
 }
 
-class HomePageCustomCard extends StatelessWidget {
-  const HomePageCustomCard({Key? key, required this.text}) : super(key: key);
-  final String text;
+class SliderExample extends StatefulWidget {
+  const SliderExample({super.key});
+
+  @override
+  State<SliderExample> createState() => _SliderExampleState();
+}
+
+class _SliderExampleState extends State<SliderExample> {
+  double _currentSliderValue = 20;
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Slider')),
+      body: Slider(
+        value: _currentSliderValue,
+        max: 100,
+        divisions: 5,
+        label: _currentSliderValue.round().toString(),
+        onChanged: (double value) {
+          setState(() {
+            _currentSliderValue = value;
+          });
+        },
+      ),
+    );
+  }
+}
+
+class HomePageCustomCard extends StatelessWidget {
+  const HomePageCustomCard({Key? key, required this.text, this.widget})
+      : super(key: key);
+  final String text;
+  final Widget? widget;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget _widget = widget != null
+        ? widget!
+        : Text(
+            text,
+            style: TextStyle(color: Colors.white),
+          );
     return Card(
       color: Colors.black,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -131,10 +189,7 @@ class HomePageCustomCard extends StatelessWidget {
         width: 200,
         height: 80,
         child: Center(
-          child: Text(
-            text,
-            style: TextStyle(color: Colors.white),
-          ),
+          child: _widget,
         ),
       ),
     );
