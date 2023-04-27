@@ -12,26 +12,24 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPage extends State<SettingsPage> {
   final Color grayColor = Color.fromARGB(255, 95, 93, 93);
   bool isScaning = false;
-  void ScanBLE() {
+  void scanBLE() {
     FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
-    if (isScaning)
-      flutterBlue.stopScan();
-    else {
-      // Start scanning
-      flutterBlue.startScan(timeout: Duration(seconds: 10));
+    print("IsAvailable: ${flutterBlue.isAvailable}");
+    // Start scanning
+    flutterBlue.startScan(
+        scanMode: ScanMode.balanced, timeout: Duration(seconds: 4));
 // Listen to scan results
-      var subscription = flutterBlue.scanResults.listen((results) {
-        // do something with scan results
-        print("scaning...");
-        for (ScanResult r in results) {
-          print('${r.device.name} found! rssi: ${r.rssi}');
-        }
-      });
-    }
-    setState(() {
-      isScaning != isScaning;
+    var subscription = flutterBlue.scanResults.listen((results) {
+      // do something with scan results
+      print(results.length.toString());
+      for (ScanResult r in results) {
+        print('${r.device.name} found! rssi: ${r.rssi}');
+      }
     });
   }
+
+  //Save selected device
+  void save() {}
 
   @override
   Widget build(BuildContext context) {
@@ -60,12 +58,13 @@ class _SettingsPage extends State<SettingsPage> {
                   icon: 'assets/BT_SCAN.jpg',
                   onPressed: () {
                     print("PASS SCAN button clicked");
-                    ScanBLE();
+                    scanBLE();
                   }),
               CustomIconButton(
                   icon: 'assets/BT_SAVE.jpg',
                   onPressed: () {
                     print("PASS CHANGE button clicked");
+                    save();
                   }),
             ],
           ),
@@ -80,6 +79,35 @@ class SettingsButtonGroup1 extends StatelessWidget {
     super.key,
   });
 
+  //Toggle passwordRequired
+  void togglePasswordRequired() {}
+  void insertCardDayNightTime() {
+    String komut = "1234SETAKT=20002300aaaa";
+    insert(komut);
+  }
+
+  void insertStartStopTime() {
+    String komut = "1234SETCDT=10602060aaaa";
+    insert(komut);
+  }
+
+  void insertSystemTime() {
+    String komut = "1234SETTIM=HHMMSSaaaaaa";
+    insert(komut);
+  }
+
+  void insertSystemDate() {
+    String komut = "1234SETDAT=DDMMYYaaaaaa";
+    insert(komut);
+  }
+
+  void onOffDevice(bool isOn) {
+    String komut =
+        (isOn ? "1234ON_OFF=111111aaaaaa" : "1234ON_OFF=000000aaaaaa");
+    insert(komut);
+  }
+
+  void insert(String komut) {}
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -89,6 +117,7 @@ class SettingsButtonGroup1 extends StatelessWidget {
             icon: 'assets/PASS_Check.jpg',
             onPressed: () {
               print("PASS CHANGE button clicked");
+              togglePasswordRequired();
             }),
         Card(color: Colors.black, child: SizedBox(width: 20, height: 20)),
         CustomIconButton(

@@ -22,6 +22,10 @@ class HomePage extends StatelessWidget {
                             icon: 'assets/BT_OFF.jpg',
                             onPressed: () {
                               print("BT_ON");
+                              //Connect - Disconnect Device
+                              String readValue =
+                                  "<00000,0289,041,SETOSH=|08,00,21,00,SETAKT=|15,05,15,03,SETCDT=|>";
+                              //"ppm(5) / 1000 - SICAKLIK / 10 - NEM - 08,00,21,00 AKT - 15,05,15,03 CDT";
                             },
                           ),
                           HomePageCustomCard(text: "PPM SET: --.--ppm")
@@ -81,6 +85,7 @@ class HomePage extends StatelessWidget {
                               icon: 'assets/BT_TIME_OFF.jpg',
                               onPressed: () {
                                 print("TEMP button clicked");
+                                //Open Close Device
                               }),
                           HomePageCustomCard(text: "--.- 'C")
                         ],
