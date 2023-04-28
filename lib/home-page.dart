@@ -1,5 +1,7 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
+import 'package:teknozone/parser.dart';
+import 'package:teknozone/settings.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -9,8 +11,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   double _currentSliderValue = 1;
   final cardWidth = 200.0;
-
   final cardHeight = 80.0;
+  final Parser parser = Parser(
+      "<08600,0235,071,SETOSH=|08,15,21,40,SETAKT=|15,45,15,53,SETCDT=|>");
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                               print("OZONE button clicked");
                             },
                           ),
-                          HomePageCustomCard(text: "--.--ppm")
+                          HomePageCustomCard(text: "${parser.getPPM()} ppm")
                         ],
                       ),
                     ),
@@ -79,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                               print("TEMP button clicked");
                             },
                           ),
-                          HomePageCustomCard(text: "--.- 'C")
+                          HomePageCustomCard(text: "${parser.getTemp()} 'C")
                         ],
                       ),
                     ),
@@ -93,7 +96,8 @@ class _HomePageState extends State<HomePage> {
                               onPressed: () {
                                 print("TEMP button clicked");
                               }),
-                          HomePageCustomCard(text: "--.- %Rh")
+                          HomePageCustomCard(
+                              text: "${parser.getMoisture()} %Rh")
                         ],
                       ),
                     ),
@@ -108,7 +112,56 @@ class _HomePageState extends State<HomePage> {
                                 print("TEMP button clicked");
                                 //Open Close Device
                               }),
-                          HomePageCustomCard(text: "--.- 'C")
+                          HomePageCustomCard(
+                            text: "",
+                            widget: Padding(
+                              padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                              child: SizedBox(
+                                child: Center(
+                                  child: Row(children: [
+                                    Image.asset(
+                                      "assets/BT_TIME_AK.jpg",
+                                      width: 40,
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            parser.getAKT1(),
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          Text(
+                                            parser.getAKT2(),
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Image.asset("assets/BT_TIME_CD.jpg",
+                                        width: 40),
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            parser.getCDT1(),
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          Text(
+                                            parser.getCDT2(),
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ]),
+                                ),
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     ),
