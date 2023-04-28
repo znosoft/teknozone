@@ -59,8 +59,9 @@ class _SettingsPage extends State<SettingsPage> {
               CustomIconButton(
                   icon: 'assets/BT_SCAN.jpg',
                   onPressed: () {
+                    FlutterBluePlus.instance.scan(scanMode: ScanMode.lowPower, timeout: Duration(seconds: 4));
                     print("PASS SCAN button clicked");
-                    ScanBLE();
+                    //ScanBLE();
                   }),
               CustomIconButton(
                   icon: 'assets/BT_SAVE.jpg',
