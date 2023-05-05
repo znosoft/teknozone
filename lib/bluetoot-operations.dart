@@ -17,23 +17,23 @@ class BlueToothOperations {
 
   //Toggle passwordRequired
   static void togglePasswordRequired() {}
-  static void insertCardDayNightTime() {
-    String komut = "1234SETAKT=20002300aaaa";
+  static void insertCardDayNightTime(String daytime, String nightTime) {
+    String komut = "1234SETAKT=$daytime${nightTime}aaaa";
     insert(komut);
   }
 
-  static void insertStartStopTime() {
-    String komut = "1234SETCDT=10602060aaaa";
+  static void insertStartStopTime(String startTime, String stopTime) {
+    String komut = "1234SETCDT=$startTime${stopTime}aaaa";
     insert(komut);
   }
 
-  static void insertSystemTime() {
-    String komut = "1234SETTIM=HHMMSSaaaaaa";
+  static void insertSystemTime(String hour, String miniute, String second) {
+    String komut = "1234SETTIM=$hour$miniute${second}aaaaaa";
     insert(komut);
   }
 
-  static void insertSystemDate() {
-    String komut = "1234SETDAT=DDMMYYaaaaaa";
+  static void insertSystemDate(String day, String month, String year) {
+    String komut = "1234SETDAT=$day$month${year}aaaaaa";
     insert(komut);
   }
 

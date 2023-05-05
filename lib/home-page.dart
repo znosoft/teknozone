@@ -13,7 +13,7 @@ class _HomePageState extends State<HomePage> {
   final cardWidth = 200.0;
   final cardHeight = 80.0;
   final Parser parser = Parser(
-      "<08600,0235,071,SETOSH=|08,15,21,40,SETAKT=|15,45,15,53,SETCDT=|>");
+      "<00000,0289,041,SETOSH=|20,00,23,00,SETAKT=|10,60,20,60,SETCDT=|>");
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
                               print("BT_ON");
                               //Connect - Disconnect Device
                               String readValue =
-                                  "<00000,0289,041,SETOSH=|08,00,21,00,SETAKT=|15,05,15,03,SETCDT=|>";
+                                  "<00000,0289,041,SETOSH=|20,00,23,00,SETAKT=|10,60,20,60,SETCDT=|>";
                               //"ppm(5) / 1000 - SICAKLIK / 10 - NEM - 08,00,21,00 AKT - 15,05,15,03 CDT";
                             },
                           ),
