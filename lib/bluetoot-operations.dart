@@ -1,18 +1,46 @@
-import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+import 'package:request_permission/request_permission.dart';
 
 class BlueToothOperations {
-  static void scanBLE() {
-    var _streamSubscription =
-        FlutterBluetoothSerial.instance.startDiscovery().listen((r) {
-      // setState(() {
-      //   final existingIndex = results.indexWhere(
-      //       (element) => element.device.address == r.device.address);
-      //   if (existingIndex >= 0)
-      //     results[existingIndex] = r;
-      //   else
-      //     results.add(r);
-      // });
+  static void scanWithUUID() {
+    final flutterReactiveBle = FlutterReactiveBle();
+    flutterReactiveBle.scanForDevices(withServices: [
+      //Uuid.parse("0000FFE0-0000-1000-8000-00805F9B34FB")
+    ]).listen((device) {
+      print("Device: $device");
+      //code for handling results
+    }, onDone: () {
+      print("Done");
+    }, onError: (error) {
+      print("Error: $error");
+      //code for handling error
     });
+  }
+
+  static Future<void> scanBLE() async {
+    //scanWithUUID();
+    var requiredPermissions = {
+      "android.permission.BLUETOOTH_SCAN",
+      "android.permission.BLUETOOTH_CONNECT"
+    };
+    var stateList = await RequestPermission.instace
+        .hasAndroidPermissions(requiredPermissions);
+    var isAnyTrue = stateList.values.toList().any((element) => element == true);
+    print("isAnyTrue: $isAnyTrue");
+    if (isAnyTrue) {
+      scanWithUUID();
+    } else {
+      RequestPermission.instace.results.listen((event) {
+        event.grantedPermissions.forEach((permission, isGranted) {
+          print("Permission - $permission: $isGranted");
+          if (permission == "android.permission.BLUETOOTH_SCAN" && isGranted) {
+            scanWithUUID();
+          }
+        });
+      });
+      RequestPermission.instace
+          .requestMultipleAndroidPermissions(requiredPermissions, 101);
+    }
   }
 
   //Toggle passwordRequired
