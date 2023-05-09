@@ -57,22 +57,22 @@ class _SettingsPage extends State<SettingsPage> {
                   icon: 'assets/BT_SCAN.jpg',
                   onPressed: () async {
                     print("PASS SCAN button clicked");
-                    //await BlueToothOperations.scanBLE();
-                    final flutterReactiveBle = FlutterReactiveBle();
-                    flutterReactiveBle.scanForDevices(withServices: [
-                      //Uuid.parse("0000FFE0-0000-1000-8000-00805F9B34FB")
-                    ]).listen((device) {
-                      print("Device123: $device");
-                      //code for handling results
-                    }, onDone: (() {
-                      print("Done123");
-                    }), onError: (error) {
-                      print("Erro123r: $error");
-                      //code for handling error
-                    });
-                    flutterReactiveBle.statusStream.listen((event) {
-                      print("Event: $event");
-                    });
+                    await BlueToothOperations.scanBLE();
+                    // final flutterReactiveBle = FlutterReactiveBle();
+                    // flutterReactiveBle.scanForDevices(withServices: [
+                    //   //Uuid.parse("0000FFE0-0000-1000-8000-00805F9B34FB")
+                    // ]).listen((device) {
+                    //   print("Device123: $device");
+                    //   //code for handling results
+                    // }, onDone: (() {
+                    //   print("Done123");
+                    // }), onError: (error) {
+                    //   print("Erro123r: $error");
+                    //   //code for handling error
+                    // });
+                    // flutterReactiveBle.statusStream.listen((event) {
+                    //   print("Event: $event");
+                    // });
                   }),
               CustomIconButton(
                   icon: 'assets/BT_SAVE.jpg',

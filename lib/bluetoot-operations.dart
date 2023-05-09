@@ -5,7 +5,7 @@ class BlueToothOperations {
   static void scanWithUUID() {
     final flutterReactiveBle = FlutterReactiveBle();
     flutterReactiveBle.scanForDevices(withServices: [
-      //Uuid.parse("0000FFE0-0000-1000-8000-00805F9B34FB")
+      Uuid.parse("0000FFE0-0000-1000-8000-00805F9B34FB")
     ]).listen((device) {
       print("Device: $device");
       //code for handling results
