@@ -1,14 +1,14 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
+import 'package:teknozone/myModel.dart';
 import 'package:teknozone/parser.dart';
 import 'package:teknozone/settings.dart';
+import 'package:teknozone/main.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
+class HomePage extends StatelessWidget {
+  HomePage({Key? key, required this.model}) : super(key: key);
 
-class _HomePageState extends State<HomePage> {
+  final MyModel model;
   double _currentSliderValue = 1;
   final cardWidth = 200.0;
   final cardHeight = 80.0;
@@ -17,6 +17,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print("MyModel-HomePage: ${model.akt1}");
     return Scaffold(
         backgroundColor: MyColors.grayColor,
         body: Row(
@@ -46,11 +47,7 @@ class _HomePageState extends State<HomePage> {
                               max: 10,
                               divisions: 10,
                               label: _currentSliderValue.round().toString(),
-                              onChanged: (double value) {
-                                setState(() {
-                                  _currentSliderValue = value;
-                                });
-                              },
+                              onChanged: (double value) {},
                             ),
                           ),
                         ],
@@ -67,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                               print("OZONE button clicked");
                             },
                           ),
-                          HomePageCustomCard(text: "${parser.getPPM()} ppm")
+                          HomePageCustomCard(text: "${model.ppm} ppm")
                         ],
                       ),
                     ),
@@ -82,7 +79,7 @@ class _HomePageState extends State<HomePage> {
                               print("TEMP button clicked");
                             },
                           ),
-                          HomePageCustomCard(text: "${parser.getTemp()} 'C")
+                          HomePageCustomCard(text: "${model.temp} 'C")
                         ],
                       ),
                     ),
@@ -96,8 +93,7 @@ class _HomePageState extends State<HomePage> {
                               onPressed: () {
                                 print("TEMP button clicked");
                               }),
-                          HomePageCustomCard(
-                              text: "${parser.getMoisture()} %Rh")
+                          HomePageCustomCard(text: "${model.moisture} %Rh")
                         ],
                       ),
                     ),
@@ -127,12 +123,12 @@ class _HomePageState extends State<HomePage> {
                                       child: Column(
                                         children: [
                                           Text(
-                                            parser.getAKT1(),
+                                            model.akt1,
                                             style:
                                                 TextStyle(color: Colors.white),
                                           ),
                                           Text(
-                                            parser.getAKT2(),
+                                            model.akt2,
                                             style:
                                                 TextStyle(color: Colors.white),
                                           ),
@@ -145,12 +141,12 @@ class _HomePageState extends State<HomePage> {
                                       child: Column(
                                         children: [
                                           Text(
-                                            parser.getCDT1(),
+                                            model.cdt1,
                                             style:
                                                 TextStyle(color: Colors.white),
                                           ),
                                           Text(
-                                            parser.getCDT2(),
+                                            model.cdt2,
                                             style:
                                                 TextStyle(color: Colors.white),
                                           ),

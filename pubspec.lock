@@ -41,6 +41,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.0"
+  date_format:
+    dependency: "direct main"
+    description:
+      name: date_format
+      sha256: "8e5154ca363411847220c8cbc43afcf69c08e8debe40ba09d57710c25711760c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.7"
   english_words:
     dependency: "direct main"
     description:
@@ -115,6 +123,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  location_permissions:
+    dependency: "direct main"
+    description:
+      name: location_permissions
+      sha256: a8429c1bc8b87bf079c49869602833853245247c453a5f74ab03d0bf177b0e1a
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1"
   matcher:
     dependency: transitive
     description:
@@ -280,6 +296,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  string_to_hex:
+    dependency: "direct main"
+    description:
+      name: string_to_hex
+      sha256: "63e5dc1f4821a2449d505033fbd4569f7020ebf30ddffb54d00ebaba8e144a49"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.2"
   term_glyph:
     dependency: transitive
     description:

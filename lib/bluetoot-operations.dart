@@ -1,5 +1,9 @@
+import 'dart:convert';
+
+import 'package:date_format/date_format.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:request_permission/request_permission.dart';
+import 'package:string_to_hex/string_to_hex.dart';
 
 class BlueToothOperations {
   static void scanWithUUID() {
@@ -45,31 +49,42 @@ class BlueToothOperations {
 
   //Toggle passwordRequired
   static void togglePasswordRequired() {}
-  static void insertCardDayNightTime(String daytime, String nightTime) {
-    String komut = "1234SETAKT=$daytime${nightTime}aaaa";
-    insert(komut);
+  static List<int> insertCardDayNightTime(String daytime, String nightTime) {
+    return convertToAscii("1234SETAKT=$daytime${nightTime}aaaa");
   }
 
-  static void insertStartStopTime(String startTime, String stopTime) {
-    String komut = "1234SETCDT=$startTime${stopTime}aaaa";
-    insert(komut);
+  static List<int> insertStartStopTime(String startTime, String stopTime) {
+    return convertToAscii("1234SETCDT=$startTime${stopTime}aaaa");
   }
 
-  static void insertSystemTime(String hour, String miniute, String second) {
-    String komut = "1234SETTIM=$hour$miniute${second}aaaaaa";
-    insert(komut);
+  static List<int> insertSystemTime(
+      String hour, String miniute, String second) {
+    return convertToAscii("1234SETTIM=$hour$miniute${second}aaaaaa");
   }
 
-  static void insertSystemDate(String day, String month, String year) {
-    String komut = "1234SETDAT=$day$month${year}aaaaaa";
-    insert(komut);
+  static List<int> insertSystemDate(DateTime date) {
+    var dateString = formatDate(date, ["dd", "mm", "yy"]);
+    // var x = "1234SETDAT=${dateString}aaaaaa";
+    var x = "1234SETDAT=010130aaaaaa";
+    print("SystemDate: $x");
+    return convertToAscii(x);
   }
 
-  static void onOffDevice(bool isOn) {
-    String komut =
-        (isOn ? "1234ON_OFF=111111aaaaaa" : "1234ON_OFF=000000aaaaaa");
-    insert(komut);
+  static List<int> onOffDevice(bool isOn) {
+    return convertToAscii(
+        (isOn ? "1234ON_OFF=111111aaaaaa" : "1234ON_OFF=000000aaaaaa"));
   }
 
-  static void insert(String komut) {}
+  static List<int> convertToAscii(String text) {
+    //var x = StringToHex.toHexString(text);
+    //print("Encode: $x");
+    return utf8.encode(text);
+    /*
+    List<int> retList = [];
+    for (int i = 0; i < text.length; i++) {
+      retList.add( text.codeUnitAt(i));
+    }
+    return retList;
+    */
+  }
 }
