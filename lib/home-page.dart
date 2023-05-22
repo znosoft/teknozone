@@ -23,7 +23,7 @@ class HomePage extends StatelessWidget {
         body: Row(
           children: [
             Container(
-              margin: const EdgeInsets.all(8),
+              margin: const EdgeInsets.all(20),
               child: Column(
                 children: [
                   Expanded(
@@ -31,7 +31,7 @@ class HomePage extends StatelessWidget {
                       child: Row(
                         children: [
                           CustomIconButton(
-                            icon: 'assets/BT_OFF.jpg',
+                            icon: 'assets/kırmızıbluut.png',
                             onPressed: () {
                               print("BT_ON");
                               //Connect - Disconnect Device
@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
                       child: Row(
                         children: [
                           CustomIconButton(
-                            icon: 'assets/OZONE.jpg',
+                            icon: 'assets/ozonn.png',
                             onPressed: () {
                               print("OZONE button clicked");
                             },
@@ -74,7 +74,7 @@ class HomePage extends StatelessWidget {
                       child: Row(
                         children: [
                           CustomIconButton(
-                            icon: 'assets/TEMP.jpg',
+                            icon: 'assets/tempp.png',
                             onPressed: () {
                               print("TEMP button clicked");
                             },
@@ -89,7 +89,7 @@ class HomePage extends StatelessWidget {
                       child: Row(
                         children: [
                           CustomIconButton(
-                              icon: 'assets/NEM.jpg',
+                              icon: 'assets/nemm.png',
                               onPressed: () {
                                 print("TEMP button clicked");
                               }),
@@ -103,7 +103,7 @@ class HomePage extends StatelessWidget {
                       child: Row(
                         children: [
                           CustomIconButton(
-                              icon: 'assets/BT_TIME_OFF.jpg',
+                              icon: 'assets/sonfoto.png',
                               onPressed: () {
                                 print("TEMP button clicked");
                                 //Open Close Device
@@ -117,7 +117,7 @@ class HomePage extends StatelessWidget {
                                   child: Row(children: [
                                     Image.asset(
                                       "assets/BT_TIME_AK.jpg",
-                                      width: 40,
+                                      width: 100,
                                     ),
                                     Expanded(
                                       child: Column(
@@ -241,7 +241,7 @@ class HomePageCustomCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: SizedBox(
         width: 200,
-        height: 80,
+        height: 100,
         child: Center(
           child: _widget,
         ),
