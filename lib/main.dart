@@ -73,7 +73,7 @@ class _MyAppState extends State<MyApp> {
             );
           }
           return Scaffold(
-            body: Container(
+            body: SizedBox(
               height: double.infinity,
               child: Center(
                   child: Icon(
