@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
@@ -50,41 +51,48 @@ class BlueToothOperations {
   //Toggle passwordRequired
   static void togglePasswordRequired() {}
   static List<int> insertCardDayNightTime(String daytime, String nightTime) {
-    return convertToAscii("1234SETAKT=$daytime${nightTime}aaaa");
+    return stringToDecArray("1234SETAKT=$daytime${nightTime}aaaa");
   }
 
   static List<int> insertStartStopTime(String startTime, String stopTime) {
-    return convertToAscii("1234SETCDT=$startTime${stopTime}aaaa");
+    return stringToDecArray("1234SETCDT=$startTime${stopTime}aaaa");
   }
 
   static List<int> insertSystemTime(
       String hour, String miniute, String second) {
-    return convertToAscii("1234SETTIM=$hour$miniute${second}aaaaaa");
+    final command = "1234SETTIM=$hour$miniute${second}aaaaaa";
+    final hexArray = stringToHexArray(command);
+    final decArray = stringToDecArray(command);
+    print("Hex Array: $hexArray");
+    print("Dec Array: $decArray");
+    return stringToHexArray("1234SETTIM=$hour$miniute${second}aaaaaa");
   }
 
   static List<int> insertSystemDate(DateTime date) {
     var dateString = formatDate(date, ["dd", "mm", "yy"]);
-    // var x = "1234SETDAT=${dateString}aaaaaa";
-    var x = "1234SETDAT=010130aaaaaa";
-    print("SystemDate: $x");
-    return convertToAscii(x);
+    var command = "1234SETTIM=${dateString}aaaaaa";
+    print("SystemDate: $command");
+    return stringToHexArray(command);
   }
 
   static List<int> onOffDevice(bool isOn) {
-    return convertToAscii(
+    return stringToDecArray(
         (isOn ? "1234ON_OFF=111111aaaaaa" : "1234ON_OFF=000000aaaaaa"));
   }
 
-  static List<int> convertToAscii(String text) {
-    //var x = StringToHex.toHexString(text);
-    //print("Encode: $x");
-    return utf8.encode(text);
-    /*
-    List<int> retList = [];
-    for (int i = 0; i < text.length; i++) {
-      retList.add( text.codeUnitAt(i));
+  static List<int> stringToDecArray(String input) {
+    List<int> decimalArray = [];
+    for (int i = 0; i < input.length; i++) {
+      decimalArray.add(input.codeUnitAt(i));
     }
-    return retList;
-    */
+    return decimalArray;
+  }
+
+  static List<int> stringToHexArray(String input) {
+    List<int> hexArray = [];
+    for (int i = 0; i < input.length; i++) {
+      hexArray.add(int.parse(input.codeUnitAt(i).toRadixString(16), radix: 16));
+    }
+    return hexArray;
   }
 }

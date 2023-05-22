@@ -1,6 +1,7 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:teknozone/bluetoot-operations.dart';
 import 'package:teknozone/myModel.dart';
 import 'package:teknozone/parser.dart';
@@ -23,6 +24,8 @@ class SettingsPage extends StatelessWidget {
   final Uuid characteristicUuid = Platform.isAndroid
       ? Uuid.parse("0000FFE1-0000-1000-8000-00805F9B34FB")
       : Uuid.parse("FFE1");
+  final Guid serviceId = Guid("0000FFE0-0000-1000-8000-00805F9B34FB");
+  final Guid characteristicGuid = Guid("0000FFE1-0000-1000-8000-00805F9B34FB");
 
   final Color grayColor = Color.fromARGB(255, 95, 93, 93);
   late Parser parser = Parser("");
@@ -35,6 +38,22 @@ class SettingsPage extends StatelessWidget {
   //Save selected device
   void save() {}
   void _startScan() async {
+    FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
+
+    flutterBlue
+        .startScan(withServices: [serviceId], timeout: Duration(seconds: 4));
+    var subscription = flutterBlue.scanResults.listen((results) {
+      // do something with scan results
+      for (var r in results) {
+        print("R: $r");
+        print("Device: ${r.device}");
+        print('${r.device.name} found! rssi: ${r.rssi}');
+        model.addDevice(r.device);
+      }
+    });
+    flutterBlue.stopScan();
+
+    /*
 // Platform permissions handling stuff
     bool permGranted = false;
     model.setIsScanStarted(true);
@@ -60,9 +79,17 @@ class SettingsPage extends StatelessWidget {
         }
       }));
     }
+    */
   }
 
   void _connectToDevice() {
+    if (model.isConnected) {
+      model.disConnect();
+    } else {
+      model.connectDevice();
+    }
+
+    /*
     print("ConnectTo Device: ${model.discoveredDevice.id}");
     model.scanStream.cancel();
     flutterReactiveBle.connectToAdvertisingDevice(
@@ -135,6 +162,7 @@ class SettingsPage extends StatelessWidget {
         default:
       }
     });
+    */
   }
 
   @override
@@ -169,11 +197,24 @@ class SettingsPage extends StatelessWidget {
             model: model,
           ),
           Expanded(
-            child: Container(
-              color: Colors.yellow,
-              height: 120,
-            ),
-          ),
+              child: ListView.builder(
+                  padding: const EdgeInsets.all(8),
+                  itemCount: model.deviceList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onLongPress: () => model.setSelectedIndex(index),
+                      child: Container(
+                        height: 50,
+                        color: model.selectedIndex != null &&
+                                model.selectedIndex == index
+                            ? Colors.amber[600]
+                            : Colors.white,
+                        child: Center(
+                            child:
+                                Text('Cihaz: ${model.deviceList[index].name}')),
+                      ),
+                    );
+                  })),
           Row(
             children: [
               CustomIconButton(
@@ -224,7 +265,7 @@ class SettingsButtonGroup1 extends StatelessWidget {
             cardHeight: 60,
             icon: 'assets/PASS_Check.jpg',
             onPressed: () {
-              print("PASS CHANGE button clicked");
+              print("PASS CHECK button clicked");
               BlueToothOperations.togglePasswordRequired();
             }),
         Card(color: Colors.black, child: SizedBox(width: 20, height: 20)),
@@ -232,27 +273,28 @@ class SettingsButtonGroup1 extends StatelessWidget {
             cardHeight: 60,
             icon: 'assets/BT_SAVE_AP.jpg',
             onPressed: () {
-              String dayTime = "";
-              String nightTime = "";
+              String dayTime = akt1Controller.text.replaceAll(RegExp(r':'), '');
+              String nightTime =
+                  akt2Controller.text.replaceAll(RegExp(r':'), '');
               var command = BlueToothOperations.insertCardDayNightTime(
                   dayTime, nightTime);
-              model.flutterReactiveBle.writeCharacteristicWithoutResponse(
-                  model.rxCharacteristic,
-                  value: command);
-              print("PASS CHANGE button clicked");
+              model.writeCharacteristic(command);
+              //model.flutterReactiveBle.writeCharacteristicWithoutResponse(model.rxCharacteristic,value: command);
+              print("SAVE AP button clicked");
             }),
         CustomIconButton(
             cardHeight: 60,
             icon: 'assets/BT_SAVE_CD.jpg',
             onPressed: () {
-              String startTime = cdt1Controller.text;
-              String stopTime = cdt2Controller.text;
+              String startTime =
+                  cdt1Controller.text.replaceAll(RegExp(r':'), '');
+              String stopTime =
+                  cdt2Controller.text.replaceAll(RegExp(r':'), '');
               var command =
                   BlueToothOperations.insertStartStopTime(startTime, stopTime);
-              model.flutterReactiveBle.writeCharacteristicWithoutResponse(
-                  model.rxCharacteristic,
-                  value: command);
-              print("BT_SAVE_CD button clicked $startTime : $stopTime");
+              //model.flutterReactiveBle.writeCharacteristicWithoutResponse(model.rxCharacteristic, value: command);
+              model.writeCharacteristic(command);
+              print("SAVE CD button clicked $startTime : $stopTime");
             }),
         CustomIconButton(
             cardHeight: 60,
@@ -264,13 +306,12 @@ class SettingsButtonGroup1 extends StatelessWidget {
               String second = dt.second.toString();
               var command =
                   BlueToothOperations.insertSystemTime(hour, miniute, second);
-              model.flutterReactiveBle.writeCharacteristicWithoutResponse(
-                  model.rxCharacteristic,
-                  value: command);
+              model.writeCharacteristic(command);
+              //model.flutterReactiveBle.writeCharacteristicWithoutResponse(model.rxCharacteristic,value: command);
               print(
                   "SystemTime: ${BlueToothOperations.insertSystemTime(hour, miniute, second)}");
               ;
-              print("PASS CHANGE button clicked");
+              print("SAVE TIME button clicked");
             }),
         CustomIconButton(
             cardHeight: 60,
@@ -278,10 +319,9 @@ class SettingsButtonGroup1 extends StatelessWidget {
             onPressed: () {
               var command =
                   BlueToothOperations.insertSystemDate(DateTime.now());
-              model.flutterReactiveBle.writeCharacteristicWithoutResponse(
-                  model.rxCharacteristic,
-                  value: command);
-              print("PASS CHANGE button clicked");
+              model.writeCharacteristic(command);
+              //model.flutterReactiveBle.writeCharacteristicWithoutResponse(model.rxCharacteristic,value: command);
+              print("SAVE DATE button clicked");
             }),
       ],
     );

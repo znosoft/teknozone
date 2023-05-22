@@ -251,5 +251,5 @@ class HomePageCustomCard extends StatelessWidget {
 }
 
 class MyColors {
-  static Color grayColor = Color.fromARGB(255, 95, 93, 93);
+  static Color grayColor = Color.fromARGB(255, 85, 85, 101);
 }

@@ -26,7 +26,7 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
-              background: Colors.black, seedColor: Colors.black),
+              background: MyColors.grayColor, seedColor: MyColors.grayColor),
         ),
         //home: MyHomePage(),
         home: FutureBuilder(

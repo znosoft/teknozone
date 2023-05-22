@@ -20,6 +20,9 @@ dependencies:
   location_permissions: ^4.0.0
   date_format: ^2.0.7
   string_to_hex: ^0.2.2
+  flutter_blue_plus: ^1.4.0
+  mask_text_input_formatter: ^2.4.0
+
 
 
 dev_dependencies:
