@@ -18,6 +18,7 @@ class MyModel extends ChangeNotifier {
   late QualifiedCharacteristic rxCharacteristic;
   bool isScanStarted = false;
   bool isDeviceFound = false;
+  bool isConnecting = false;
   bool isConnected = false;
   late DiscoveredDevice discoveredDevice;
   String akt1 = "";
@@ -71,6 +72,8 @@ class MyModel extends ChangeNotifier {
 
   BluetoothDevice? connectDevice() {
     if (selectedIndex == null) return null;
+    isConnecting = true;
+    isConnected = false;
     var _device = deviceList[selectedIndex!];
     _device.connect().then((value) {
       isConnected = true;

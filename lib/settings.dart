@@ -1,16 +1,13 @@
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:masked_text/masked_text.dart';
 import 'package:teknozone/bluetoot-operations.dart';
 import 'package:teknozone/myModel.dart';
 import 'package:teknozone/parser.dart';
 import 'home-page.dart';
-import 'dart:async';
 import 'dart:io' show Platform;
 
-import 'package:location_permissions/location_permissions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -172,74 +169,77 @@ class SettingsPage extends StatelessWidget {
     akt1Controller.text = model.akt1;
     akt2Controller.text = model.akt2;
     model.flutterReactiveBle = flutterReactiveBle;
-    return Flexible(
-        child: ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 150),
-      child: Container(
-        color: MyColors.grayColor,
-        child: Flex(direction: Axis.vertical, children: [
-          SettingsBigCard(
-            cdt1Controller: cdt1Controller,
-            cdt2Controller: cdt2Controller,
-            akt1Controller: akt1Controller,
-            akt2Controller: akt2Controller,
-          ),
-          CustomIconButton(
-              icon: 'assets/PASS_CHANGE.jpg',
-              onPressed: () {
-                print("PASS CHANGE button clicked");
-              }),
-          SettingsButtonGroup1(
-            cdt1Controller: cdt1Controller,
-            cdt2Controller: cdt2Controller,
-            akt1Controller: akt1Controller,
-            akt2Controller: akt2Controller,
-            model: model,
-          ),
-          Expanded(
-              child: ListView.builder(
-                  padding: const EdgeInsets.all(8),
-                  itemCount: model.deviceList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onLongPress: () => model.setSelectedIndex(index),
-                      child: Container(
-                        height: 50,
-                        color: model.selectedIndex != null &&
-                                model.selectedIndex == index
-                            ? Colors.amber[600]
-                            : Colors.white,
-                        child: Center(
-                            child:
-                                Text('Cihaz: ${model.deviceList[index].name}')),
-                      ),
-                    );
-                  })),
-          Row(
-            children: [
-              CustomIconButton(
-                  icon: 'assets/BT_SCAN.jpg',
-                  onPressed: () async {
-                    print("PASS SCAN button clicked");
-                    _startScan();
-                    //await BlueToothOperations.scanBLE();
-                  }),
-              CustomIconButton(
-                  icon: 'assets/BT_SAVE.jpg',
-                  onPressed: () {
-                    print("PASS CHANGE button clicked");
-                    save();
-                  }),
-              model.isDeviceFound
-                  ? CustomIconButton(
-                      icon: 'assets/BT_ON.jpg', onPressed: _connectToDevice)
-                  : CustomIconButton(
-                      icon: 'assets/BT_OFF.jpg', onPressed: () {}),
-            ],
-          ),
-        ]),
-      ),
-    ));
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Flexible(
+          child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 150),
+        child: Container(
+          color: MyColors.grayColor,
+          child: Flex(direction: Axis.vertical, children: [
+            SettingsBigCard(
+              cdt1Controller: cdt1Controller,
+              cdt2Controller: cdt2Controller,
+              akt1Controller: akt1Controller,
+              akt2Controller: akt2Controller,
+            ),
+            CustomIconButton(
+                icon: 'assets/PASS_CHANGE.jpg',
+                onPressed: () {
+                  print("PASS CHANGE button clicked");
+                }),
+            SettingsButtonGroup1(
+              cdt1Controller: cdt1Controller,
+              cdt2Controller: cdt2Controller,
+              akt1Controller: akt1Controller,
+              akt2Controller: akt2Controller,
+              model: model,
+            ),
+            Expanded(
+                child: ListView.builder(
+                    padding: const EdgeInsets.all(8),
+                    itemCount: model.deviceList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onLongPress: () => model.setSelectedIndex(index),
+                        child: Container(
+                          height: 50,
+                          color: model.selectedIndex != null &&
+                                  model.selectedIndex == index
+                              ? Colors.amber[600]
+                              : Colors.white,
+                          child: Center(
+                              child: Text(
+                                  'Cihaz: ${model.deviceList[index].name}')),
+                        ),
+                      );
+                    })),
+            Row(
+              children: [
+                CustomIconButton(
+                    icon: 'assets/BT_SCAN.jpg',
+                    onPressed: () async {
+                      print("PASS SCAN button clicked");
+                      _startScan();
+                      //await BlueToothOperations.scanBLE();
+                    }),
+                CustomIconButton(
+                    icon: 'assets/BT_SAVE.jpg',
+                    onPressed: () {
+                      print("PASS CHANGE button clicked");
+                      save();
+                    }),
+                model.isDeviceFound
+                    ? CustomIconButton(
+                        icon: 'assets/BT_ON.jpg', onPressed: _connectToDevice)
+                    : CustomIconButton(
+                        icon: 'assets/BT_OFF.jpg', onPressed: () {}),
+              ],
+            ),
+          ]),
+        ),
+      )),
+    );
   }
 }
 
@@ -358,23 +358,22 @@ class SettingsBigCard extends StatelessWidget {
               Expanded(
                 child: Column(
                   children: [
-                    TextField(
+                    MaskedTextField(
                       controller: akt1Controller,
                       style: TextStyle(
                         color: Colors.white,
                       ),
+                      mask: "##:##",
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(border: InputBorder.none),
-                      inputFormatters: [
-                        //FilteringTextInputFormatter.digitsOnly,
-                        //FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        LengthLimitingTextInputFormatter(5)
-                      ],
                     ),
-                    TextField(
+                    MaskedTextField(
                       controller: akt2Controller,
                       style: TextStyle(
                         color: Colors.white,
                       ),
+                      mask: "##:##",
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(border: InputBorder.none),
                     ),
                   ],
@@ -384,16 +383,22 @@ class SettingsBigCard extends StatelessWidget {
               Expanded(
                 child: Column(
                   children: [
-                    TextField(
+                    MaskedTextField(
                       controller: cdt1Controller,
                       style: TextStyle(
                         color: Colors.white,
                       ),
+                      mask: "##:##",
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(border: InputBorder.none),
                     ),
-                    TextField(
+                    MaskedTextField(
                       controller: cdt2Controller,
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      mask: "##:##",
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(border: InputBorder.none),
                     ),
                   ],

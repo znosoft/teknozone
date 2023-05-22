@@ -148,13 +148,21 @@ packages:
     source: hosted
     version: "4.0.1"
   mask_text_input_formatter:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: mask_text_input_formatter
       sha256: "19bb7809c3c2559277e95521b3ee421e1409eb2cc85efd2feb191696c92490f4"
       url: "https://pub.dev"
     source: hosted
     version: "2.4.0"
+  masked_text:
+    dependency: "direct main"
+    description:
+      name: masked_text
+      sha256: dc3467eb5a128f9a4767023c10279ea522788fb90fd126a2b49fd858df576e65
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.2"
   matcher:
     dependency: transitive
     description:
