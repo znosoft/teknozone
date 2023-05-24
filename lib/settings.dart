@@ -81,7 +81,6 @@ class SettingsPage extends StatelessWidget {
 
   void _connectToDevice() {
     if (model.isConnected) {
-      model.disConnect();
     } else {
       model.connectDevice();
     }
@@ -183,11 +182,11 @@ class SettingsPage extends StatelessWidget {
               akt1Controller: akt1Controller,
               akt2Controller: akt2Controller,
             ),
-            CustomIconButton(
-                icon: 'assets/PASS_CHANGE.jpg',
-                onPressed: () {
-                  print("PASS CHANGE button clicked");
-                }),
+            // CustomIconButton(
+            //     icon: 'assets/PASS_CHANGE.jpg',
+            //     onPressed: () {
+            //       print("PASS CHANGE button clicked");
+            //     }),
             SettingsButtonGroup1(
               cdt1Controller: cdt1Controller,
               cdt2Controller: cdt2Controller,
@@ -223,17 +222,17 @@ class SettingsPage extends StatelessWidget {
                       _startScan();
                       //await BlueToothOperations.scanBLE();
                     }),
-                CustomIconButton(
-                    icon: 'assets/BT_SAVE.jpg',
-                    onPressed: () {
-                      print("PASS CHANGE button clicked");
-                      save();
-                    }),
-                model.isDeviceFound
-                    ? CustomIconButton(
-                        icon: 'assets/BT_ON.jpg', onPressed: _connectToDevice)
-                    : CustomIconButton(
-                        icon: 'assets/BT_OFF.jpg', onPressed: () {}),
+                // CustomIconButton(
+                //     icon: 'assets/BT_SAVE.jpg',
+                //     onPressed: () {
+                //       print("PASS CHANGE button clicked");
+                //       save();
+                //     }),
+                // model.isDeviceFound
+                //     ? CustomIconButton(
+                //         icon: 'assets/BT_ON.jpg', onPressed: _connectToDevice)
+                //     : CustomIconButton(
+                //         icon: 'assets/BT_OFF.jpg', onPressed: () {}),
               ],
             ),
           ]),
@@ -261,14 +260,14 @@ class SettingsButtonGroup1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        CustomIconButton(
-            cardHeight: 60,
-            icon: 'assets/PASS_Check.jpg',
-            onPressed: () {
-              print("PASS CHECK button clicked");
-              BlueToothOperations.togglePasswordRequired();
-            }),
-        Card(color: Colors.black, child: SizedBox(width: 20, height: 20)),
+        // CustomIconButton(
+        //     cardHeight: 60,
+        //     icon: 'assets/PASS_Check.jpg',
+        //     onPressed: () {
+        //       print("PASS CHECK button clicked");
+        //       BlueToothOperations.togglePasswordRequired();
+        //     }),
+        // Card(color: Colors.black, child: SizedBox(width: 20, height: 20)),
         CustomIconButton(
             cardHeight: 60,
             icon: 'assets/BT_SAVE_AP.jpg',

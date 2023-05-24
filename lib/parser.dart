@@ -3,10 +3,10 @@ class Parser {
   Parser(this.text);
 
   double getPPM() {
-    //"<00000,0295,041,SETOSH=|08,00,21,00,SETAKT=|15,05,15,03,SETCDT=|>";
     var ppm = text.substring(1, 6);
     var ppmInt = int.parse(ppm);
-    return ppmInt / 1000;
+    print("PPM: $ppmInt");
+    return ppmInt / 10000;
   }
 
   double getTemp() {

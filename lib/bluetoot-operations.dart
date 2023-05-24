@@ -80,6 +80,15 @@ class BlueToothOperations {
         (isOn ? "1234ON_OFF=111111aaaaaa" : "1234ON_OFF=000000aaaaaa"));
   }
 
+  static List<int> setPPM(double value) {
+    value = truncateDouble(value, 2);
+    var valueInt = (value * 100).round();
+    var command = "1234SETOSH=000${valueInt}0aaaaaaa";
+    //var command = "1234SETOSH=00099aaaaaaa";
+    print("PPM COMMAND: $command");
+    return stringToDecArray(command);
+  }
+
   static List<int> stringToDecArray(String input) {
     List<int> decimalArray = [];
     for (int i = 0; i < input.length; i++) {
@@ -94,5 +103,20 @@ class BlueToothOperations {
       hexArray.add(int.parse(input.codeUnitAt(i).toRadixString(16), radix: 16));
     }
     return hexArray;
+  }
+
+  static double truncateDouble(double val, int decimals) {
+    String valString = val.toString();
+    int dotIndex = valString.indexOf('.');
+
+    // not enough decimals
+    int totalDecimals = valString.length - dotIndex - 1;
+    if (totalDecimals < decimals) {
+      decimals = totalDecimals;
+    }
+
+    valString = valString.substring(0, dotIndex + decimals + 1);
+
+    return double.parse(valString);
   }
 }

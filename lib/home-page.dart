@@ -1,54 +1,92 @@
 // ignore_for_file: file_names
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:masked_text/masked_text.dart';
+import 'package:teknozone/bluetoot-operations.dart';
 import 'package:teknozone/myModel.dart';
-import 'package:teknozone/parser.dart';
-import 'package:teknozone/settings.dart';
-import 'package:teknozone/main.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key, required this.model}) : super(key: key);
 
   final MyModel model;
-  double _currentSliderValue = 1;
   final cardWidth = 200.0;
   final cardHeight = 80.0;
-  final Parser parser = Parser(
-      "<00000,0289,041,SETOSH=|20,00,23,00,SETAKT=|10,60,20,60,SETCDT=|>");
-
+  TextEditingController cdt1Controller = TextEditingController();
+  TextEditingController cdt2Controller = TextEditingController();
+  TextEditingController akt1Controller = TextEditingController();
+  TextEditingController akt2Controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     print("MyModel-HomePage: ${model.akt1}");
+    cdt1Controller.text = model.cdt1;
+    cdt2Controller.text = model.cdt2;
+    akt1Controller.text = model.akt1;
+    akt2Controller.text = model.akt2;
+    Timer ppmTimer = Timer(Duration.zero, () {});
     return Scaffold(
         backgroundColor: MyColors.grayColor,
         body: Row(
           children: [
             Container(
-              margin: const EdgeInsets.all(20),
+              margin: const EdgeInsets.all(10),
               child: Column(
                 children: [
                   Expanded(
                     child: FittedBox(
                       child: Row(
                         children: [
-                          CustomIconButton(
-                            icon: 'assets/kırmızıbluut.png',
-                            onPressed: () {
-                              print("BT_ON");
-                              //Connect - Disconnect Device
-                              String readValue =
-                                  "<00000,0289,041,SETOSH=|20,00,23,00,SETAKT=|10,60,20,60,SETCDT=|>";
-                              //"ppm(5) / 1000 - SICAKLIK / 10 - NEM - 08,00,21,00 AKT - 15,05,15,03 CDT";
+                          model.isConnected
+                              ? CustomIconButton(
+                                  icon: 'assets/BT_ON.jpg',
+                                  onPressed: () {
+                                    print("BT_ON");
+                                    model.disConnect();
+                                  },
+                                )
+                              : model.isConnecting
+                                  ? CustomIconButton(
+                                      icon: 'assets/BT_CON.jpg',
+                                      onPressed: () {
+                                        print("BT_ON");
+                                        model.connectDevice();
+                                      })
+                                  : CustomIconButton(
+                                      icon: 'assets/kırmızıbluut.png',
+                                      onPressed: () {
+                                        print("BT_ON");
+                                        model.connectDevice();
+                                      },
+                                    ),
+                          GestureDetector(
+                            onDoubleTap: () {
+                              if (model.isSetPPMEnabled) {
+                                var command = BlueToothOperations.setPPM(
+                                    model.ppmSetting);
+                                print("Set PPM: $command");
+                                model.writeCharacteristic(command);
+                                model.setIsSetPPMEnabled(false);
+                              } else {
+                                model.setIsSetPPMEnabled(true);
+                              }
                             },
-                          ),
-                          HomePageCustomCard(
-                            text: "",
-                            widget: Slider(
-                              value: _currentSliderValue,
-                              max: 10,
-                              divisions: 10,
-                              label: _currentSliderValue.round().toString(),
-                              onChanged: (double value) {},
-                            ),
+                            child: HomePageCustomCard(
+                                text: "",
+                                widget: Slider(
+                                  value: model.ppmSetting,
+                                  max: 0.09,
+                                  divisions: 10,
+                                  label: model.ppmSetting.toString(),
+                                  onChanged: (value) {
+                                    value = BlueToothOperations.truncateDouble(
+                                        value, 2);
+                                    if (model.isSetPPMEnabled) {
+                                      model.setPPMSetting(value);
+                                    }
+                                  },
+                                )
+                                //SliderExample(model: model),
+                                ),
                           ),
                         ],
                       ),
@@ -64,7 +102,20 @@ class HomePage extends StatelessWidget {
                               print("OZONE button clicked");
                             },
                           ),
-                          HomePageCustomCard(text: "${model.ppm} ppm")
+                          GestureDetector(
+                              onTap: () {
+                                if (model.isSetPPMEnabled) {
+                                  var command = BlueToothOperations.setPPM(
+                                      model.ppmSetting);
+                                  print("Set PPM: $command");
+                                  model.writeCharacteristic(command);
+                                  model.setIsSetPPMEnabled(false);
+                                } else {
+                                  model.setIsSetPPMEnabled(true);
+                                }
+                              },
+                              child:
+                                  HomePageCustomCard(text: "${model.ppm} ppm"))
                         ],
                       ),
                     ),
@@ -103,58 +154,76 @@ class HomePage extends StatelessWidget {
                       child: Row(
                         children: [
                           CustomIconButton(
-                              icon: 'assets/sonfoto.png',
+                              icon: model.isOn
+                                  ? 'assets/BT_TIME_ON.jpg'
+                                  : 'assets/BT_TIME_OFF.jpg',
                               onPressed: () {
-                                print("TEMP button clicked");
-                                //Open Close Device
+                                print("ON_OFF button clicked");
+                                var command = BlueToothOperations.onOffDevice(
+                                    !model.isOn);
+                                model.writeCharacteristic(command);
+                                model.setIsOn(!model.isOn);
                               }),
                           HomePageCustomCard(
                             text: "",
-                            widget: Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
-                              child: SizedBox(
-                                child: Center(
-                                  child: Row(children: [
-                                    Image.asset(
-                                      "assets/BT_TIME_AK.jpg",
-                                      width: 100,
+                            widget: SizedBox(
+                              child: Center(
+                                child: Row(children: [
+                                  Image.asset(
+                                    "assets/BT_TIME_AK.jpg",
+                                    height: 60,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          akt1Controller.text,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10),
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Text(
+                                          akt2Controller.text,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10),
+                                        )
+                                      ],
                                     ),
-                                    Expanded(
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            model.akt1,
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                          Text(
-                                            model.akt2,
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        ],
-                                      ),
+                                  ),
+                                  Image.asset("assets/BT_TIME_CD.jpg",
+                                      height: 60),
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          cdt1Controller.text,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10),
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Text(
+                                          cdt2Controller.text,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10),
+                                        )
+                                      ],
                                     ),
-                                    Image.asset("assets/BT_TIME_CD.jpg",
-                                        width: 40),
-                                    Expanded(
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            model.cdt1,
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                          Text(
-                                            model.cdt2,
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ]),
-                                ),
+                                  ),
+                                ]),
                               ),
                             ),
                           )
@@ -193,35 +262,6 @@ class CustomIconButton extends StatelessWidget {
   }
 }
 
-class SliderExample extends StatefulWidget {
-  const SliderExample({super.key});
-
-  @override
-  State<SliderExample> createState() => _SliderExampleState();
-}
-
-class _SliderExampleState extends State<SliderExample> {
-  double _currentSliderValue = 20;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Slider')),
-      body: Slider(
-        value: _currentSliderValue,
-        max: 100,
-        divisions: 5,
-        label: _currentSliderValue.round().toString(),
-        onChanged: (double value) {
-          setState(() {
-            _currentSliderValue = value;
-          });
-        },
-      ),
-    );
-  }
-}
-
 class HomePageCustomCard extends StatelessWidget {
   const HomePageCustomCard({Key? key, required this.text, this.widget})
       : super(key: key);
@@ -239,9 +279,10 @@ class HomePageCustomCard extends StatelessWidget {
     return Card(
       color: Colors.black,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      margin: EdgeInsets.zero,
       child: SizedBox(
-        width: 200,
-        height: 100,
+        width: 140,
+        height: 60,
         child: Center(
           child: _widget,
         ),

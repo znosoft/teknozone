@@ -26,8 +26,11 @@ class MyModel extends ChangeNotifier {
   String cdt1 = "";
   String cdt2 = "";
   double ppm = 0;
+  double ppmSetting = 0;
   double temp = 0;
   int moisture = 0;
+  bool isSetPPMEnabled = false;
+  bool isOn = true;
 
   late BluetoothService service;
   late BluetoothCharacteristic? characteristic;
@@ -59,6 +62,8 @@ class MyModel extends ChangeNotifier {
   }
 
   void addServices(BluetoothService value) {
+    isConnected = true;
+    notifyListeners();
     service = value;
     // Reads all characteristics
     var characteristics = service.characteristics;
@@ -76,7 +81,6 @@ class MyModel extends ChangeNotifier {
     isConnected = false;
     var _device = deviceList[selectedIndex!];
     _device.connect().then((value) {
-      isConnected = true;
       _device.discoverServices().then((value) async {
         for (var _service in value) {
           if (_service.uuid == serviceId) {
@@ -85,15 +89,19 @@ class MyModel extends ChangeNotifier {
         }
       });
     });
+    notifyListeners();
   }
 
   void disConnect() {
+    isConnected = false;
+    isConnecting = false;
     if (selectedIndex == null) return null;
     var _device = deviceList[selectedIndex!];
     if (_device != null) {
       _device.disconnect();
-      isConnected = false;
+      isDeviceFound = true;
     }
+    notifyListeners();
   }
 
   void setSelectedIndex(int index) {
@@ -188,8 +196,23 @@ class MyModel extends ChangeNotifier {
     updateView = true;
   }
 
+  void setPPMSetting(double value) {
+    ppmSetting = value;
+    notifyListeners();
+  }
+
   void changeUpdateView(bool value) {
     updateView = value;
+    notifyListeners();
+  }
+
+  void setIsSetPPMEnabled(bool value) {
+    isSetPPMEnabled = value;
+    notifyListeners();
+  }
+
+  void setIsOn(bool value) {
+    isOn = value;
     notifyListeners();
   }
 }
