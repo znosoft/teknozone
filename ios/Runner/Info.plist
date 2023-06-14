@@ -29,15 +29,15 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Need BLE permission</string>
+	<string>Cihaza bağlanmak için bluetooth bağlantı yetkisi vermeniz gerekiyor.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Need BLE permission</string>
+	<string>Cihazına bağlanmak için bluetooth bağlantı yetkisi vermeniz gerekiyor.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Need Location permission</string>
+	<string>Cihaza bağlanmak için konumunuza erişmemize izin vermelisiniz.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Need Location permission</string>
+	<string>Cihaza bağlanmak için konumunuza erişmemize izin vermelisiniz.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Need Location permission</string>
+	<string>Cihaza bağlanmak için konumunuza erişmemize izin vermelisiniz.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
