@@ -170,8 +170,7 @@ class SettingsPage extends StatelessWidget {
     model.flutterReactiveBle = flutterReactiveBle;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: Flexible(
-          child: ConstrainedBox(
+      child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 150),
         child: Container(
           color: MyColors.grayColor,
@@ -237,7 +236,7 @@ class SettingsPage extends StatelessWidget {
             ),
           ]),
         ),
-      )),
+      ),
     );
   }
 }
