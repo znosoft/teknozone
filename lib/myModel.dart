@@ -164,36 +164,40 @@ class MyModel extends ChangeNotifier {
   void setAKT1(String value) {
     akt1 = value;
     updateView = true;
+    notifyListeners();
   }
 
   void setAKT2(String value) {
     akt2 = value;
     updateView = true;
+    notifyListeners();
   }
 
   void setCDT1(String value) {
     cdt1 = value;
     updateView = true;
+    notifyListeners();
   }
 
   void setCDT2(String value) {
     cdt2 = value;
     updateView = true;
+    notifyListeners();
   }
 
   void setTemp(double value) {
     temp = temp;
-    updateView = true;
+    notifyListeners();
   }
 
   void setMoisture(int value) {
     moisture = value;
-    updateView = true;
+    notifyListeners();
   }
 
   void setPPM(double value) {
     ppm = value;
-    updateView = true;
+    notifyListeners();
   }
 
   void setPPMSetting(double value) {
