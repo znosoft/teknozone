@@ -70,7 +70,7 @@ class BlueToothOperations {
 
   static List<int> insertSystemDate(DateTime date) {
     var dateString = formatDate(date, ["dd", "mm", "yy"]);
-    var command = "1234SETTIM=${dateString}aaaaaa";
+    var command = "1234SETDAT=${dateString}aaaaaa";
     print("SystemDate: $command");
     return stringToHexArray(command);
   }
