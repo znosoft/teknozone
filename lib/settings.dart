@@ -13,7 +13,7 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 class SettingsPage extends StatelessWidget {
   SettingsPage({super.key, required this.model});
   final MyModel model;
-  late DiscoveredDevice _ubiqueDevice;
+  late final DiscoveredDevice _ubiqueDevice;
   final flutterReactiveBle = FlutterReactiveBle();
   final Uuid serviceUuid = Platform.isAndroid
       ? Uuid.parse("0000FFE0-0000-1000-8000-00805F9B34FB")
@@ -25,13 +25,18 @@ class SettingsPage extends StatelessWidget {
   final Guid characteristicGuid = Guid("0000FFE1-0000-1000-8000-00805F9B34FB");
 
   final Color grayColor = Color.fromARGB(255, 95, 93, 93);
-  late Parser parser = Parser("");
+  late final Parser parser = Parser("");
 
-  TextEditingController cdt1Controller = TextEditingController();
-  TextEditingController cdt2Controller = TextEditingController();
-  TextEditingController akt1Controller = TextEditingController();
-  TextEditingController akt2Controller = TextEditingController();
-  bool isScaning = false;
+  final TextEditingController cdt1Controller = TextEditingController();
+  final TextEditingController cdt2Controller = TextEditingController();
+  final TextEditingController akt1Controller = TextEditingController();
+  final TextEditingController akt2Controller = TextEditingController();
+  final FocusNode cdt1FocusNode = FocusNode();
+  final FocusNode cdt2FocusNode = FocusNode();
+  final FocusNode akt1FocusNode = FocusNode();
+  final FocusNode akt2FocusNode = FocusNode();
+  
+  final bool isScaning = false;
   //Save selected device
   void save() {}
   void _startScan() async {
@@ -39,7 +44,7 @@ class SettingsPage extends StatelessWidget {
 
     flutterBlue
         .startScan(withServices: [serviceId], timeout: Duration(seconds: 4));
-    var subscription = flutterBlue.scanResults.listen((results) {
+    flutterBlue.scanResults.listen((results) {
       // do something with scan results
       for (var r in results) {
         print("R: $r");
@@ -79,97 +84,50 @@ class SettingsPage extends StatelessWidget {
     */
   }
 
-  void _connectToDevice() {
-    if (model.isConnected) {
-    } else {
-      model.connectDevice();
-    }
-
-    /*
-    print("ConnectTo Device: ${model.discoveredDevice.id}");
-    model.scanStream.cancel();
-    flutterReactiveBle.connectToAdvertisingDevice(
-        id: model.discoveredDevice.id,
-        prescanDuration: const Duration(seconds: 1),
-        withServices: [serviceUuid]).listen((event) async {
-      print("event: $event");
-      switch (event.connectionState) {
-        case DeviceConnectionState.connected:
-          {
-            print("Connected: ${event.deviceId}");
-            model.rxCharacteristic = QualifiedCharacteristic(
-                serviceId: serviceUuid,
-                characteristicId: characteristicUuid,
-                deviceId: event.deviceId);
-            final response = await flutterReactiveBle
-                .readCharacteristic(model.rxCharacteristic);
-
-            print("Response: ${response.length} - $response");
-            var _text = String.fromCharCodes(response);
-            print("Response: $_text");
-            /*
-            */
-            model.setIsDeviceFound(false);
-            model.setIsConnected(true);
-            // setState(() {
-            //   _foundDeviceWaitingToConnect = false;
-            //   _connected = true;
-            // });
-            const int maxSize = 65;
-            String readText = "";
-            bool updateScreen = true;
-            flutterReactiveBle
-                .subscribeToCharacteristic(model.rxCharacteristic)
-                .listen((data) {
-              readText += String.fromCharCodes(data);
-              if (readText.length == maxSize) {
-                print("Final Text: $readText");
-                /*
-                model.setAKT1(parser.getAKT1());
-                model.setAKT2(parser.getAKT2());
-                model.setCDT1(parser.getCDT1());
-                model.setCDT2(parser.getCDT2());
-                */
-                if (updateScreen) {
-                  parser = Parser(readText);
-                  model.setValues(parser);
-                  print("AKT1: ${model.akt1}");
-                  akt1Controller.text = model.akt1;
-                  akt2Controller.text = model.akt2;
-                  cdt1Controller.text = model.cdt1;
-                  cdt2Controller.text = model.cdt2;
-                  updateScreen = false;
-                  readText = "";
-                }
-              }
-              print("Length ${data.length}");
-              print("Data: $_text");
-              // code to handle incoming data
-            }, onError: (dynamic error) {
-              // code to handle errors
-            });
-            break;
-          }
-        // Can add various state state updates on disconnect
-        case DeviceConnectionState.disconnected:
-          {
-            break;
-          }
-        default:
-      }
-    });
-    */
-  }
 
   @override
   Widget build(BuildContext context) {
+    cdt1FocusNode.addListener(() {
+      if(cdt1FocusNode.hasFocus) {
+        model.stopListening();
+      } else {
+        model.startListening();
+      }
+      print("Focus cdt1: ${cdt1FocusNode.hasFocus}");
+    });
+    cdt2FocusNode.addListener(() {
+      if(cdt2FocusNode.hasFocus) {
+        model.stopListening();
+      } else {
+        model.startListening();
+      }
+      print("Focus cdt2: ${cdt2FocusNode.hasFocus}");
+    });
+    akt1FocusNode.addListener(() {
+      if(akt1FocusNode.hasFocus) {
+        model.stopListening();
+      } else {
+        model.startListening();
+      }
+      print("Focus akt1: ${akt1FocusNode.hasFocus}");
+    });
+    akt2FocusNode.addListener(() {
+      if(akt2FocusNode.hasFocus) {
+        model.stopListening();
+      } else {
+        model.startListening();
+      }
+      print("Focus akt2: ${akt2FocusNode.hasFocus}");
+    });
     cdt1Controller.text = model.cdt1;
     cdt2Controller.text = model.cdt2;
     akt1Controller.text = model.akt1;
     akt2Controller.text = model.akt2;
     model.flutterReactiveBle = flutterReactiveBle;
     return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 150),
         child: Container(
@@ -180,6 +138,10 @@ class SettingsPage extends StatelessWidget {
               cdt2Controller: cdt2Controller,
               akt1Controller: akt1Controller,
               akt2Controller: akt2Controller,
+              cdt1FocusNode: cdt1FocusNode,
+              cdt2FocusNode: cdt2FocusNode,
+              akt1FocusNode: akt1FocusNode,
+              akt2FocusNode: akt2FocusNode,
             ),
             // CustomIconButton(
             //     icon: 'assets/PASS_CHANGE.jpg',
@@ -288,8 +250,7 @@ class SettingsButtonGroup1 extends StatelessWidget {
                   cdt1Controller.text.replaceAll(RegExp(r':'), '');
               String stopTime =
                   cdt2Controller.text.replaceAll(RegExp(r':'), '');
-              var command =
-                  BlueToothOperations.insertStartStopTime(startTime, stopTime);
+              var command = BlueToothOperations.insertStartStopTime(startTime, stopTime);
               //model.flutterReactiveBle.writeCharacteristicWithoutResponse(model.rxCharacteristic, value: command);
               model.writeCharacteristic(command);
               print("SAVE CD button clicked $startTime : $stopTime");
@@ -315,8 +276,7 @@ class SettingsButtonGroup1 extends StatelessWidget {
             cardHeight: 60,
             icon: 'assets/BT_SAVE_DATE.jpg',
             onPressed: () {
-              var command =
-                  BlueToothOperations.insertSystemDate(DateTime.now());
+              var command = BlueToothOperations.insertSystemDate(DateTime.now());
               model.writeCharacteristic(command);
               //model.flutterReactiveBle.writeCharacteristicWithoutResponse(model.rxCharacteristic,value: command);
               print("SAVE DATE button clicked");
@@ -332,11 +292,19 @@ class SettingsBigCard extends StatelessWidget {
       required this.cdt1Controller,
       required this.cdt2Controller,
       required this.akt1Controller,
-      required this.akt2Controller});
+      required this.akt2Controller,
+      required this.cdt1FocusNode,
+      required this.cdt2FocusNode,
+      required this.akt1FocusNode,
+      required this.akt2FocusNode});
   final TextEditingController cdt1Controller;
   final TextEditingController cdt2Controller;
   final TextEditingController akt1Controller;
   final TextEditingController akt2Controller;
+  final FocusNode cdt1FocusNode;
+  final FocusNode cdt2FocusNode;
+  final FocusNode akt1FocusNode;
+  final FocusNode akt2FocusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -358,6 +326,7 @@ class SettingsBigCard extends StatelessWidget {
                   children: [
                     MaskedTextField(
                       controller: akt1Controller,
+                      focusNode: akt1FocusNode,
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -367,6 +336,7 @@ class SettingsBigCard extends StatelessWidget {
                     ),
                     MaskedTextField(
                       controller: akt2Controller,
+                      focusNode: akt2FocusNode,
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -383,6 +353,7 @@ class SettingsBigCard extends StatelessWidget {
                   children: [
                     MaskedTextField(
                       controller: cdt1Controller,
+                      focusNode: cdt1FocusNode,
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -392,6 +363,7 @@ class SettingsBigCard extends StatelessWidget {
                     ),
                     MaskedTextField(
                       controller: cdt2Controller,
+                      focusNode: cdt2FocusNode,
                       style: TextStyle(
                         color: Colors.white,
                       ),

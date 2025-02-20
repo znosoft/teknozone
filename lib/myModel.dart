@@ -8,7 +8,10 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:teknozone/parser.dart';
 
 class MyModel extends ChangeNotifier {
-  bool updateView = true;
+  bool updateView = true;  
+  bool isListening = true; // Yeni durum
+  // Diğer değişkenler ve metodlar...
+
   final Guid serviceId = Guid("0000FFE0-0000-1000-8000-00805F9B34FB");
   final Guid characteristicGuid = Guid("0000FFE1-0000-1000-8000-00805F9B34FB");
   int? selectedIndex;
@@ -34,30 +37,61 @@ class MyModel extends ChangeNotifier {
 
   late BluetoothService service;
   late BluetoothCharacteristic? characteristic;
+
+  void startListening() {
+    isListening = true;
+    notifyListeners();
+  }
+
+  void stopListening() {
+    isListening = false;
+    notifyListeners();
+  }
+
   void addCharacteristic(BluetoothCharacteristic value) {
     const int maxSize = 65;
     String readText = "";
     characteristic = value;
-    characteristic!.setNotifyValue(true);
-    characteristic!.value.listen((value) {
-      if (updateView) {
-        readText += String.fromCharCodes(value);
-        if (readText.length == maxSize) {
-          setValues(readText);
-          changeUpdateView(false);
-          print("Read: $readText");
-          readText = "";
-        }
-      }
-      //print("Read: $value");
+    characteristic!.setNotifyValue(true).then((_){
+      characteristic!.value.listen((value) {
+            if (updateView && isListening) {
+              readText += String.fromCharCodes(value);
+              if(!readText.startsWith('<')) {
+                readText = "";
+              } else if (readText.length == maxSize) {
+                setValues(readText);
+                //changeUpdateView(false);
+                print("Read: $readText");
+                readText = "";
+              }
+            }
+            //print("Read: $value");
+          }).onError((error){
+            print("Error reading characteristic: $error");
+          });
+    }).catchError((error){
+      print("Error setting notify value: $error");
     });
+    
     //notifyListeners();
   }
 
   void writeCharacteristic(List<int> value) {
+    print("Write Charahteristics: $value");
     if (characteristic != null) {
-      characteristic!.write(value);
-      updateView = true;
+      characteristic!.write(value).then((_){
+        startListening();
+        changeUpdateView(true);
+      }).catchError((error){
+        print("Error writing characteristic: $error");
+      });
+
+      Future.delayed(Duration(seconds: 2), () {
+        startListening();
+        changeUpdateView(true);
+      });
+    } else {
+      print("Characteristic is null, cannot write");
     }
   }
 
@@ -76,9 +110,11 @@ class MyModel extends ChangeNotifier {
   }
 
   BluetoothDevice? connectDevice() {
+    startListening();
     if (selectedIndex == null) return null;
     isConnecting = true;
     isConnected = false;
+    notifyListeners();
     var _device = deviceList[selectedIndex!];
     _device.connect().then((value) {
       _device.discoverServices().then((value) async {
@@ -88,14 +124,21 @@ class MyModel extends ChangeNotifier {
           }
         }
       });
+    }).catchError((error) {
+      isConnected = false;
+      isConnecting = false;
+      updateView = true;
+      isListening = true;
+      notifyListeners();
+      print("Connection Error: $error");
     });
-    notifyListeners();
+    return _device;
   }
 
   void disConnect() {
     isConnected = false;
     isConnecting = false;
-    if (selectedIndex == null) return null;
+    if (selectedIndex == null) return;
     var _device = deviceList[selectedIndex!];
     if (_device != null) {
       _device.disconnect();
@@ -144,7 +187,6 @@ class MyModel extends ChangeNotifier {
   }
 
   void setDiscoveredDevice(DiscoveredDevice value) {
-    print("Device: ${value.name}");
     discoveredDevice = value;
     notifyListeners();
   }
@@ -164,45 +206,41 @@ class MyModel extends ChangeNotifier {
   void setAKT1(String value) {
     akt1 = value;
     updateView = true;
-    notifyListeners();
   }
 
   void setAKT2(String value) {
     akt2 = value;
     updateView = true;
-    notifyListeners();
   }
 
   void setCDT1(String value) {
     cdt1 = value;
     updateView = true;
-    notifyListeners();
   }
 
   void setCDT2(String value) {
     cdt2 = value;
     updateView = true;
-    notifyListeners();
   }
 
   void setTemp(double value) {
-    temp = temp;
-    notifyListeners();
+    temp = value;
+    updateView = true;
   }
 
   void setMoisture(int value) {
     moisture = value;
-    notifyListeners();
+    updateView = true;
   }
 
   void setPPM(double value) {
     ppm = value;
-    notifyListeners();
+    updateView = true;
   }
 
   void setPPMSetting(double value) {
     ppmSetting = value;
-    notifyListeners();
+    updateView = true;
   }
 
   void changeUpdateView(bool value) {

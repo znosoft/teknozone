@@ -51,11 +51,17 @@ class BlueToothOperations {
   //Toggle passwordRequired
   static void togglePasswordRequired() {}
   static List<int> insertCardDayNightTime(String daytime, String nightTime) {
-    return stringToDecArray("1234SETAKT=$daytime${nightTime}aaaa");
+    final command = "1234SETAKT=$daytime${nightTime}aaaa";
+    //final command = "1234SETAKT=00000000aaaa";
+    print("COMMAND AKT: $command");
+    return stringToHexArray(command);
   }
 
   static List<int> insertStartStopTime(String startTime, String stopTime) {
-    return stringToDecArray("1234SETCDT=$startTime${stopTime}aaaa");
+    final command = "1234SETCDT=$startTime${stopTime}aaaa";
+    //final command = "1234SETCDT=11111111aaaa";
+    print("COMMAND CDT: $command");
+    return stringToDecArray(command);
   }
 
   static List<int> insertSystemTime(
@@ -76,7 +82,7 @@ class BlueToothOperations {
   }
 
   static List<int> onOffDevice(bool isOn) {
-    return stringToDecArray(
+    return stringToHexArray(
         (isOn ? "1234ON_OFF=111111aaaaaa" : "1234ON_OFF=000000aaaaaa"));
   }
 

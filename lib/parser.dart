@@ -5,14 +5,14 @@ class Parser {
   double getPPM() {
     var ppm = text.substring(1, 6);
     var ppmInt = int.parse(ppm);
-    print("PPM: $ppmInt");
-    return ppmInt / 10000;
+    return ppmInt / 1000;
   }
 
   double getTemp() {
     var temp = text.substring(7, 11);
     var tempInt = int.parse(temp);
-    return tempInt / 10;
+    double realTemp = tempInt / 10;
+    return realTemp;
   }
 
   int getMoisture() {

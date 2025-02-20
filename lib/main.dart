@@ -30,8 +30,7 @@ class _MyAppState extends State<MyApp> {
         ),
         //home: MyHomePage(),
         home: FutureBuilder(
-            //future: FlutterBluePlus.instance.isAvailable,
-            //future: FlutterBluetoothSerial.instance.requestEnable(),
+            future: Future.delayed(Duration(seconds: 2)), // Replace with your actual future
             builder: (context, future) {
           if (future.connectionState != ConnectionState.waiting) {
             return DefaultTabController(

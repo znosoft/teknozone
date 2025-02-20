@@ -12,6 +12,7 @@ class HomePage extends StatelessWidget {
   final MyModel model;
   final cardWidth = 200.0;
   final cardHeight = 80.0;
+  final connectionErrorMsg = "Cihaza bağlanamadı! Lütfen daha sonra tekrar deneyin.";
   TextEditingController cdt1Controller = TextEditingController();
   TextEditingController cdt2Controller = TextEditingController();
   TextEditingController akt1Controller = TextEditingController();
@@ -49,13 +50,23 @@ class HomePage extends StatelessWidget {
                                       icon: 'assets/BT_CON.jpg',
                                       onPressed: () {
                                         print("BT_ON");
-                                        model.connectDevice();
+                                        var device = model.connectDevice();
+                                        if (device == null) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text(connectionErrorMsg)),
+                                          );
+                                        }
                                       })
                                   : CustomIconButton(
                                       icon: 'assets/kırmızıbluut.png',
                                       onPressed: () {
                                         print("BT_ON");
-                                        model.connectDevice();
+                                        var device = model.connectDevice();
+                                        if (device == null) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text(connectionErrorMsg)),
+                                          );
+                                        }
                                       },
                                     ),
                           GestureDetector(
