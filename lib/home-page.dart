@@ -281,7 +281,7 @@ class HomePageCustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget _widget = widget != null
+    Widget cardWidget = widget != null
         ? widget!
         : Text(
             text,
@@ -295,7 +295,7 @@ class HomePageCustomCard extends StatelessWidget {
         width: 140,
         height: 60,
         child: Center(
-          child: _widget,
+          child: cardWidget,
         ),
       ),
     );
